@@ -46,3 +46,14 @@ Route::post('/order/save', [BuyerController::class, 'storeOrder'])->middleware('
 // 10. HALAMAN TAMBAH MENU (SELLER)
 Route::get('/seller/add-menu', [SellerController::class, 'createMenu'])->middleware('auth');
 Route::post('/seller/add-menu/store', [SellerController::class, 'storeMenu'])->middleware('auth');
+
+Route::get('/reset-db-darurat', function () {
+    // 1. Bersihkan Cache (biar gak nyangkut)
+    \Illuminate\Support\Facades\Artisan::call('config:clear');
+    \Illuminate\Support\Facades\Artisan::call('cache:clear');
+    
+    // 2. Paksa Migrasi & Seeding
+    \Illuminate\Support\Facades\Artisan::call('migrate:fresh --seed --force');
+    
+    return "BERHASIL! Database udah di-reset dan diisi data baru (Binusian). Silakan Login.";
+});
